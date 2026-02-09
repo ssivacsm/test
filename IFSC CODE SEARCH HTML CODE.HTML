@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUBRAMANIYA SIVA COOP SUGAR MILLS LTD. | IFSC Code Search</title>
+  <!-- SheetJS library to handle Excel files -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: linear-gradient(90deg, #1a2980 0%, #26d0ce 100%);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(26, 41, 128, 0.2);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDEyMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PHBhdGggZD0iTTAgMzBsMjAgMzBjMjAgMzAgNjAgMzAgODAgMGwyMC0zMGMyMC0zMCA2MC0zMCA4MCAwbDIwIDMwYzIwIDMwIDYwIDMwIDgwIDBsMjAtMzBjMjAtMzAgNjAtMzAgODAgMGwyMCAzMGMyMCAzMCA2MCAzMCA4MCAwTDEyMDAgMEgweiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIi8+PC9zdmc+');
+      background-size: 1200px 120px;
+    }
+
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      position: relative;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 992px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .upload-section {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .upload-section h2 {
+      font-family: 'Poppins', sans-serif;
+      color: #1a2980;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #26d0ce;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .upload-section h2 i {
+      color: #26d0ce;
+    }
+
+    .file-input-container {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .file-input-label {
+      display: block;
+      background: #f8f9fa;
+      border: 2px dashed #c3cfe2;
+      border-radius: 10px;
+      padding: 30px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .file-input-label:hover {
+      border-color: #26d0ce;
+      background: #f0f7ff;
+      transform: translateY(-3px);
+    }
+
+    .file-input-label i {
+      font-size: 3rem;
+      color: #1a2980;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .file-input-label span {
+      font-weight: 500;
+      color: #1a2980;
+    }
+
+    .file-input-label small {
+      display: block;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+
+    #excelFile {
+      display: none;
+    }
+
+    .button {
+      background: linear-gradient(90deg, #1a2980 0%, #26d0ce 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      box-shadow: 0 5px 15px rgba(26, 41, 128, 0.2);
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(26, 41, 128, 0.3);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .progress-section {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .progress-section h2 {
+      font-family: 'Poppins', sans-serif;
+      color: #1a2980;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #26d0ce;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-section h2 i {
+      color: #26d0ce;
+    }
+
+    .progress-container {
+      margin-bottom: 20px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .progress-bar-container {
+      height: 25px;
+      background: #f0f0f0;
+      border-radius: 50px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #1a2980 0%, #26d0ce 100%);
+      border-radius: 50px;
+      transition: width 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    .progress-percentage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .results-section {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      animation: fadeInUp 1.2s ease-out;
+      display: none;
+      margin-top: 30px;
+    }
+
+    .results-header {
+      background: linear-gradient(90deg, #1a2980 0%, #26d0ce 100%);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .results-header h2 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #downloadExcel {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 10px 25px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #downloadExcel:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .table-container {
+      overflow-x: auto;
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #f8f9fa;
+    }
+
+    th {
+      padding: 15px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #1a2980;
+      border-bottom: 2px solid #e0e0e0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    td {
+      padding: 15px 12px;
+      border-bottom: 1px solid #e0e0e0;
+      transition: all 0.2s ease;
+    }
+
+    tbody tr {
+      animation: fadeInRow 0.5s ease-out;
+      animation-fill-mode: both;
+    }
+
+    tbody tr:hover {
+      background-color: #f8f9fa;
+      transform: translateX(5px);
+    }
+
+    .status-found {
+      color: #28a745;
+      font-weight: 500;
+    }
+
+    .status-not-found {
+      color: #dc3545;
+      font-weight: 500;
+    }
+
+    .status-error {
+      color: #ffc107;
+      font-weight: 500;
+    }
+
+    .spinner {
+      display: none;
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .spinner i {
+      font-size: 3rem;
+      color: #1a2980;
+      animation: spin 1.5s linear infinite;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    .stat-1 .stat-icon {
+      background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
+    }
+
+    .stat-2 .stat-icon {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+
+    .stat-3 .stat-icon {
+      background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+    }
+
+    .stat-content h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1a2980;
+    }
+
+    .stat-content p {
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    @keyframes fadeInRow {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Staggered animation for table rows */
+    tbody tr:nth-child(1) { animation-delay: 0.1s; }
+    tbody tr:nth-child(2) { animation-delay: 0.2s; }
+    tbody tr:nth-child(3) { animation-delay: 0.3s; }
+    tbody tr:nth-child(4) { animation-delay: 0.4s; }
+    tbody tr:nth-child(5) { animation-delay: 0.5s; }
+    tbody tr:nth-child(6) { animation-delay: 0.6s; }
+    tbody tr:nth-child(7) { animation-delay: 0.7s; }
+    tbody tr:nth-child(8) { animation-delay: 0.8s; }
+    tbody tr:nth-child(9) { animation-delay: 0.9s; }
+    tbody tr:nth-child(10) { animation-delay: 1.0s; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-university"></i> SUBRAMANIYA SIVA COOP SUGAR MILLS LTD.</h1>
+      <p class="subtitle">IFSC Code Search Tool - Upload an Excel file with IFSC codes to fetch bank details from RBI database</p>
+    </header>
+
+    <div class="main-content">
+      <div class="upload-section">
+        <h2><i class="fas fa-file-upload"></i> Upload Excel File</h2>
+        <div class="file-input-container">
+          <label for="excelFile" class="file-input-label">
+            <i class="fas fa-file-excel"></i>
+            <span>Click to select Excel file</span>
+            <small>Supports .xlsx or .xls formats</small>
+          </label>
+          <input type="file" id="excelFile" accept=".xlsx, .xls" />
+          <div class="file-info" id="fileInfo" style="margin-top: 15px; display: none;">
+            <p><strong>Selected file:</strong> <span id="fileName"></span></p>
+            <p><strong>File size:</strong> <span id="fileSize"></span></p>
+          </div>
+        </div>
+        
+        <button id="uploadBtn" class="button">
+          <i class="fas fa-search"></i> Search IFSC Codes
+        </button>
+        
+        <div class="stats" id="statsContainer" style="display: none; margin-top: 30px;">
+          <div class="stat-card stat-1">
+            <div class="stat-icon">
+              <i class="fas fa-list-ol"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="totalCodes">0</h3>
+              <p>IFSC Codes</p>
+            </div>
+          </div>
+          <div class="stat-card stat-2">
+            <div class="stat-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="foundCodes">0</h3>
+              <p>Found</p>
+            </div>
+          </div>
+          <div class="stat-card stat-3">
+            <div class="stat-icon">
+              <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="notFoundCodes">0</h3>
+              <p>Not Found</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <h2><i class="fas fa-chart-line"></i> Processing Progress</h2>
+        <div class="progress-container">
+          <div class="progress-info">
+            <span>Status: <span id="progressStatus">Ready to upload</span></span>
+            <span id="progressCount">0/0</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar">
+              <div class="progress-percentage" id="progressPercentage">0%</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="spinner" id="spinner">
+          <i class="fas fa-circle-notch"></i>
+          <p style="margin-top: 15px; font-weight: 500;">Fetching bank details from RBI database...</p>
+        </div>
+        
+        <div class="instructions" style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+          <h3 style="color: #1a2980; margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Instructions:</h3>
+          <ul style="padding-left: 20px;">
+            <li>Prepare an Excel file with IFSC codes in the first column</li>
+            <li>Click "Upload and Search" to process your file</li>
+            <li>Track progress with the progress bar and real-time updates</li>
+            <li>Download results as Excel when processing is complete</li>
+            <li>Data is fetched from the official Razorpay IFSC API</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-section" id="results">
+      <div class="results-header">
+        <h2><i class="fas fa-table"></i> Search Results</h2>
+        <button id="downloadExcel">
+          <i class="fas fa-download"></i> Download Results
+        </button>
+      </div>
+      
+      <div class="table-container">
+        <table id="resultTable">
+          <thead>
+            <tr>
+              <th>IFSC Code</th>
+              <th>Bank</th>
+              <th>Branch</th>
+              <th>Address</th>
+              <th>City</th>
+              <th>District</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    
+    <footer>
+      <p>SUBRAMANIYA SIVA COOP SUGAR MILLS LTD., GOPALAPURAM | IFSC Code Search Tool v2.0</p>
+      <p>Powered by RBI IFSC Database | Data provided by Razorpay IFSC API</p>
+    </footer>
+  </div>
+
+  <script>
+    // Global variables to track stats
+    let totalCodes = 0;
+    let foundCodes = 0;
+    let notFoundCodes = 0;
+    
+    // When the user selects a file, show file info
+    document.getElementById('excelFile').addEventListener('change', function(e) {
+      if (this.files.length > 0) {
+        const file = this.files[0];
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        fileInfo.style.display = 'block';
+        
+        // Update status
+        document.getElementById('progressStatus').textContent = 'File selected, ready to process';
+        document.getElementById('progressStatus').style.color = '#1a2980';
+      }
+    });
+    
+    // When the user clicks the upload button, read Excel file and extract IFSC codes.
+    document.getElementById('uploadBtn').addEventListener('click', async function () {
+      const fileInput = document.getElementById('excelFile');
+      if (!fileInput.files.length) {
+        showAlert('Please select an Excel file.', 'error');
+        return;
+      }
+      
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+      
+      // Disable button and show spinner
+      this.disabled = true;
+      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      document.getElementById('spinner').style.display = 'block';
+      
+      reader.onload = function (e) {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: 'binary' });
+        
+        // Read data from the first sheet
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        
+        // Convert the sheet data to a 2D array (each inner array represents a row)
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        
+        // If the first row is a header, start at row 2; otherwise start at row 0.
+        const startRow = isNaN(jsonData[0][0]) ? 1 : 0;
+        const ifscCodes = [];
+        
+        for (let i = startRow; i < jsonData.length; i++) {
+          if (jsonData[i][0]) {
+            ifscCodes.push(jsonData[i][0].toString().trim());
+          }
+        }
+        
+        if (ifscCodes.length === 0) {
+          showAlert("No IFSC codes found in the first column.", 'error');
+          document.getElementById('uploadBtn').disabled = false;
+          document.getElementById('uploadBtn').innerHTML = '<i class="fas fa-search"></i> Search IFSC Codes';
+          document.getElementById('spinner').style.display = 'none';
+          return;
+        }
+        
+        // Reset stats and progress bar
+        resetStats();
+        totalCodes = ifscCodes.length;
+        updateStats();
+        
+        // Update UI
+        document.getElementById('progressStatus').textContent = 'Fetching bank details...';
+        document.getElementById('progressStatus').style.color = '#1a2980';
+        document.getElementById('progressCount').textContent = `0/${totalCodes}`;
+        document.getElementById('progressBar').style.width = "0%";
+        document.getElementById('progressPercentage').textContent = "0%";
+        
+        // Show stats container
+        document.getElementById('statsContainer').style.display = 'grid';
+        
+        // Fetch bank details
+        fetchBankDetails(ifscCodes);
+      };
+      
+      reader.onerror = function (ex) {
+        console.error("Error reading file: ", ex);
+        showAlert("Error reading the selected file.", 'error');
+        document.getElementById('uploadBtn').disabled = false;
+        document.getElementById('uploadBtn').innerHTML = '<i class="fas fa-search"></i> Search IFSC Codes';
+        document.getElementById('spinner').style.display = 'none';
+      };
+      
+      reader.readAsBinaryString(file);
+    });
+
+    // Fetch bank details for each IFSC code using the Razorpay IFSC API.
+    async function fetchBankDetails(ifscCodes) {
+      const results = [];
+      
+      for (let i = 0; i < ifscCodes.length; i++) {
+        const code = ifscCodes[i];
+        try {
+          // The API returns data in JSON for a valid IFSC code.
+          const response = await fetch("https://ifsc.razorpay.com/" + code);
+          
+          if (response.ok) {
+            const data = await response.json();
+            results.push({
+              IFSC: code,
+              Bank: data.BANK || "",
+              Branch: data.BRANCH || "",
+              Address: data.ADDRESS || "",
+              City: data.CITY || "",
+              District: data.DISTRICT || "",
+              Status: "Found"
+            });
+            foundCodes++;
+          } else {
+            // API did not return valid details; mark as Not Found.
+            results.push({
+              IFSC: code,
+              Bank: "Not Found",
+              Branch: "",
+              Address: "",
+              City: "",
+              District: "",
+              Status: "Not Found"
+            });
+            notFoundCodes++;
+          }
+        } catch (err) {
+          console.error("Error fetching details for: " + code, err);
+          results.push({
+            IFSC: code,
+            Bank: "Error",
+            Branch: "",
+            Address: "",
+            City: "",
+            District: "",
+            Status: "Error"
+          });
+          notFoundCodes++;
+        }
+        
+        // Update progress after each API call.
+        const progressPercent = Math.round(((i + 1) / ifscCodes.length) * 100);
+        document.getElementById('progressBar').style.width = progressPercent + "%";
+        document.getElementById('progressPercentage').textContent = progressPercent + "%";
+        document.getElementById('progressCount').textContent = `${i + 1}/${ifscCodes.length}`;
+        
+        // Update stats
+        updateStats();
+      }
+      
+      // Update status and enable button
+      document.getElementById('progressStatus').textContent = 'Processing complete!';
+      document.getElementById('progressStatus').style.color = '#28a745';
+      document.getElementById('uploadBtn').disabled = false;
+      document.getElementById('uploadBtn').innerHTML = '<i class="fas fa-search"></i> Search IFSC Codes';
+      document.getElementById('spinner').style.display = 'none';
+      
+      populateResults(results);
+      showAlert(`Successfully processed ${ifscCodes.length} IFSC codes!`, 'success');
+    }
+
+    // Populate the HTML table with the fetched bank details.
+    function populateResults(data) {
+      const tbody = document.getElementById('resultTable').querySelector('tbody');
+      tbody.innerHTML = "";
+      
+      data.forEach(function (row) {
+        const tr = document.createElement('tr');
+
+        // Determine status class
+        let statusClass = '';
+        if (row.Status === 'Found') statusClass = 'status-found';
+        else if (row.Status === 'Not Found') statusClass = 'status-not-found';
+        else if (row.Status === 'Error') statusClass = 'status-error';
+
+        const tdIFSC = document.createElement('td');
+        tdIFSC.textContent = row.IFSC;
+        
+        const tdBank = document.createElement('td');
+        tdBank.textContent = row.Bank;
+        
+        const tdBranch = document.createElement('td');
+        tdBranch.textContent = row.Branch;
+        
+        const tdAddress = document.createElement('td');
+        tdAddress.textContent = row.Address;
+        
+        const tdCity = document.createElement('td');
+        tdCity.textContent = row.City;
+        
+        const tdDistrict = document.createElement('td');
+        tdDistrict.textContent = row.District;
+        
+        const tdStatus = document.createElement('td');
+        tdStatus.textContent = row.Status;
+        tdStatus.className = statusClass;
+
+        tr.appendChild(tdIFSC);
+        tr.appendChild(tdBank);
+        tr.appendChild(tdBranch);
+        tr.appendChild(tdAddress);
+        tr.appendChild(tdCity);
+        tr.appendChild(tdDistrict);
+        tr.appendChild(tdStatus);
+        
+        tbody.appendChild(tr);
+      });
+      
+      // Show results section with animation
+      const resultsSection = document.getElementById('results');
+      resultsSection.style.display = "block";
+      
+      // Scroll to results
+      setTimeout(() => {
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+      
+      // Save the results globally for the Excel download.
+      window.downloadData = data;
+    }
+
+    // Download the displayed results as an Excel file.
+    document.getElementById('downloadExcel').addEventListener('click', function () {
+      if (!window.downloadData || window.downloadData.length === 0) {
+        showAlert("No data available to download!", 'error');
+        return;
+      }
+      
+      // Create a download animation
+      const originalText = this.innerHTML;
+      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing download...';
+      this.disabled = true;
+      
+      setTimeout(() => {
+        const wb = XLSX.utils.book_new();
+        // Prepare an array-of-arrays for the worksheet including all columns
+        const ws_data = [["IFSC Code", "Bank", "Branch", "Address", "City", "District", "Status"]];
+        
+        window.downloadData.forEach(function (row) {
+          ws_data.push([row.IFSC, row.Bank, row.Branch, row.Address, row.City, row.District, row.Status]);
+        });
+        
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+        XLSX.utils.book_append_sheet(wb, ws, "IFSC Results");
+        
+        // Trigger download of the Excel file.
+        XLSX.writeFile(wb, `IFSC_Results_${new Date().toISOString().slice(0,10)}.xlsx`);
+        
+        // Reset button
+        this.innerHTML = originalText;
+        this.disabled = false;
+        
+        showAlert('File downloaded successfully!', 'success');
+      }, 800);
+    });
+
+    // Utility functions
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' bytes';
+      else if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
+      else return (bytes / 1048576).toFixed(2) + ' MB';
+    }
+    
+    function showAlert(message, type) {
+      // Create alert element
+      const alert = document.createElement('div');
+      alert.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 500;
+        z-index: 1000;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        animation: fadeInUp 0.5s ease-out;
+      `;
+      
+      if (type === 'success') {
+        alert.style.background = 'linear-gradient(90deg, #28a745 0%, #20c997 100%)';
+      } else if (type === 'error') {
+        alert.style.background = 'linear-gradient(90deg, #dc3545 0%, #fd7e14 100%)';
+      } else {
+        alert.style.background = 'linear-gradient(90deg, #1a2980 0%, #26d0ce 100%)';
+      }
+      
+      alert.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+      
+      document.body.appendChild(alert);
+      
+      // Remove alert after 3 seconds
+      setTimeout(() => {
+        alert.style.opacity = '0';
+        alert.style.transition = 'opacity 0.5s';
+        setTimeout(() => {
+          document.body.removeChild(alert);
+        }, 500);
+      }, 3000);
+    }
+    
+    function resetStats() {
+      totalCodes = 0;
+      foundCodes = 0;
+      notFoundCodes = 0;
+    }
+    
+    function updateStats() {
+      document.getElementById('totalCodes').textContent = totalCodes;
+      document.getElementById('foundCodes').textContent = foundCodes;
+      document.getElementById('notFoundCodes').textContent = notFoundCodes;
+    }
+    
+    // Initialize with sample data for demo (optional)
+    function initializeDemo() {
+      // This is just to show how the table looks with data
+      // Remove or comment this in production
+      setTimeout(() => {
+        if (!window.downloadData) {
+          document.getElementById('progressStatus').textContent = 'Upload an Excel file to begin';
+          document.getElementById('progressStatus').style.color = '#1a2980';
+        }
+      }, 1000);
+    }
+    
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', initializeDemo);
+  </script>
+</body>
+</html>
