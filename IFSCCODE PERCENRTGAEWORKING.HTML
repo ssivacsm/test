@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>SUBRAMANIYA SIVA COOP SUGAR MILLS LTD., GOPALAPURAM IFSC CODE SEARCH</title>
+  <!-- SheetJS library to handle Excel files -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    table, th, td {
+      border: 1px solid #aaa;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    /* Progress bar container styles */
+    #progressContainer {
+      width: 100%;
+      background-color: #ddd;
+      margin: 10px 0;
+    }
+    /* Progress bar styles with animation */
+    #progressBar {
+      width: 0%;
+      height: 20px;
+      background-color: green;
+      text-align: center;
+      line-height: 20px;
+      color: white;
+      transition: width 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <h1>SUBRAMANIYA SIVA COOP SUGAR MILLS LTD., GOPALAPURAM IFSC CODE SEARCH</h1>
+  <p>Select an Excel file (.xlsx or .xls) that contains IFSC codes in the first column.</p>
+  <input type="file" id="excelFile" accept=".xlsx, .xls" />
+  <button id="uploadBtn">Upload and Search</button>
+  
+  <!-- Progress bar element -->
+  <div id="progressContainer">
+    <div id="progressBar">0%</div>
+  </div>
+  
+  <div id="results" style="display:none;">
+    <h2>Search Results:</h2>
+    <table id="resultTable">
+      <thead>
+        <tr>
+          <th>IFSC Code</th>
+          <th>Bank</th>
+          <th>Branch</th>
+          <th>Address</th>
+          <th>City</th>
+          <th>District</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  
+  <button id="downloadExcel" style="display:none;">Download Results as Excel</button>
+
+  <script>
+    // When the user clicks the upload button, read Excel file and extract IFSC codes.
+    document.getElementById('uploadBtn').addEventListener('click', function () {
+      var fileInput = document.getElementById('excelFile');
+      if (!fileInput.files.length) {
+        alert('Please select an Excel file.');
+        return;
+      }
+      var file = fileInput.files[0];
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var data = e.target.result;
+        var workbook = XLSX.read(data, { type: 'binary' });
+        // Read data from the first sheet
+        var sheetName = workbook.SheetNames[0];
+        var worksheet = workbook.Sheets[sheetName];
+        // Convert the sheet data to a 2D array (each inner array represents a row)
+        var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        // If the first row is a header, start at row 2; otherwise start at row 0.
+        var startRow = isNaN(jsonData[0][0]) ? 1 : 0;
+        var ifscCodes = [];
+        for (var i = startRow; i < jsonData.length; i++) {
+          if (jsonData[i][0]) {
+            ifscCodes.push(jsonData[i][0].toString().trim());
+          }
+        }
+        if (ifscCodes.length === 0) {
+          alert("No IFSC codes found in the first column.");
+          return;
+        }
+        // Reset and display progress bar
+        document.getElementById('progressBar').style.width = "0%";
+        document.getElementById('progressBar').textContent = "0%";
+        fetchBankDetails(ifscCodes);
+      };
+      reader.onerror = function (ex) {
+        console.error("Error reading file: ", ex);
+      };
+      reader.readAsBinaryString(file);
+    });
+
+    // Fetch bank details for each IFSC code using the Razorpay IFSC API.
+    async function fetchBankDetails(ifscCodes) {
+      var results = [];
+      for (var i = 0; i < ifscCodes.length; i++) {
+        var code = ifscCodes[i];
+        try {
+          // The API returns data in JSON for a valid IFSC code.
+          let response = await fetch("https://ifsc.razorpay.com/" + code);
+          if (response.ok) {
+            let data = await response.json();
+            results.push({
+              IFSC: code,
+              Bank: data.BANK || "",
+              Branch: data.BRANCH || "",
+              Address: data.ADDRESS || "",
+              City: data.CITY || "",
+              District: data.DISTRICT || ""
+            });
+          } else {
+            // API did not return valid details; mark as Not Found.
+            results.push({
+              IFSC: code,
+              Bank: "Not Found",
+              Branch: "",
+              Address: "",
+              City: "",
+              District: ""
+            });
+          }
+        } catch (err) {
+          console.error("Error fetching details for: " + code, err);
+          results.push({
+            IFSC: code,
+            Bank: "Error",
+            Branch: "",
+            Address: "",
+            City: "",
+            District: ""
+          });
+        }
+        // Update progress after each API call.
+        var progressPercent = Math.round(((i + 1) / ifscCodes.length) * 100);
+        document.getElementById('progressBar').style.width = progressPercent + "%";
+        document.getElementById('progressBar').textContent = progressPercent + "%";
+      }
+      populateResults(results);
+    }
+
+    // Populate the HTML table with the fetched bank details.
+    function populateResults(data) {
+      var tbody = document.getElementById('resultTable').querySelector('tbody');
+      tbody.innerHTML = "";
+      data.forEach(function (row) {
+        var tr = document.createElement('tr');
+
+        var tdIFSC = document.createElement('td');
+        tdIFSC.textContent = row.IFSC;
+        var tdBank = document.createElement('td');
+        tdBank.textContent = row.Bank;
+        var tdBranch = document.createElement('td');
+        tdBranch.textContent = row.Branch;
+        var tdAddress = document.createElement('td');
+        tdAddress.textContent = row.Address;
+        var tdCity = document.createElement('td');
+        tdCity.textContent = row.City;
+        var tdDistrict = document.createElement('td');
+        tdDistrict.textContent = row.District;
+
+        tr.appendChild(tdIFSC);
+        tr.appendChild(tdBank);
+        tr.appendChild(tdBranch);
+        tr.appendChild(tdAddress);
+        tr.appendChild(tdCity);
+        tr.appendChild(tdDistrict);
+        tbody.appendChild(tr);
+      });
+      document.getElementById('results').style.display = "block";
+      document.getElementById('downloadExcel').style.display = "inline-block";
+      // Save the results globally for the Excel download.
+      window.downloadData = data;
+    }
+
+    // Download the displayed results as an Excel file.
+    document.getElementById('downloadExcel').addEventListener('click', function () {
+      if (!window.downloadData || window.downloadData.length === 0) {
+        alert("No data available to download!");
+        return;
+      }
+      var wb = XLSX.utils.book_new();
+      // Prepare an array-of-arrays for the worksheet including new column "District".
+      var ws_data = [["IFSC Code", "Bank", "Branch", "Address", "City", "District"]];
+      window.downloadData.forEach(function (row) {
+        ws_data.push([row.IFSC, row.Bank, row.Branch, row.Address, row.City, row.District]);
+      });
+      var ws = XLSX.utils.aoa_to_sheet(ws_data);
+      XLSX.utils.book_append_sheet(wb, ws, "Results");
+      // Trigger download of the Excel file.
+      XLSX.writeFile(wb, "IFSC_Bank_Details.xlsx");
+    });
+  </script>
+</body>
+</html>
